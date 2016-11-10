@@ -30,6 +30,9 @@ public class Token {
     public static final int O_LOGICO = 18;
     public static final int NO_LOGICO = 19;
 
+    public static final int COMA = 50;
+    public static final int PUNTOYCOMA = 51;
+
     //
     public static final int VALOR_ENTERO = 100;
     public static final int VALOR_REAL = 101;
