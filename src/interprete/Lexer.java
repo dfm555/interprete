@@ -7,7 +7,7 @@ package interprete;
 
 /**
  *
- * @author Oscar
+ * @author Oscar Arenas
  */
 public class Lexer {
 
@@ -49,6 +49,12 @@ public class Lexer {
                     return Token.ABRIR_PARENTESIS;
                 case ')':
                     return Token.CERRAR_PARENTESIS;
+                case ',':
+                    return Token.COMA;
+                case ';':
+                    return Token.PUNTOYCOMA;
+                case '=':
+                    return Token.ASIGNACION;
                 default:
                     if (Character.isDigit(caracter)) {
                         while (posicion + longitud < n
@@ -57,7 +63,6 @@ public class Lexer {
                             ++longitud;
                         }
 
-                        //return Token.VALOR_ENTERO;
                         if (posicion + longitud < n
                                 && expresion.charAt(posicion + longitud) == '.') {
                             ++longitud;
@@ -70,6 +75,15 @@ public class Lexer {
                             return Token.VALOR_REAL;
                         }
                         return Token.VALOR_ENTERO;
+                    } else if (Character.isAlphabetic(caracter)) {
+                        while (posicion + longitud < n
+                                && (Character.isDigit(expresion.charAt(posicion
+                                        + longitud)) || Character.isAlphabetic(expresion.charAt(posicion
+                                        + longitud)))) {
+                            ++longitud;
+                        }
+
+                        return Token.ID;
                     }
             }
         }
@@ -89,13 +103,34 @@ public class Lexer {
         return token == nuevoToken;
     }
 
+    public boolean nextTokenIs(int token) {
+        int auxiliarPoisicion = posicion;
+        int auxiliarLongitud = longitud;
+
+        advance();
+        boolean ans = match(token);
+
+        posicion = auxiliarPoisicion;
+        longitud = auxiliarLongitud;
+
+        return ans;
+    }
+
     public int obtenerEntero() {
+        // System.out.println("Posicion: " + posicion + ", longitud: " + longitud);
         return Integer.parseInt(expresion.substring(posicion, posicion
                 + longitud));
     }
 
     public double obtenerReal() {
+        // System.out.println("Posicion: " + posicion + ", longitud: " + longitud);
         return Double.parseDouble(expresion.substring(posicion, posicion
                 + longitud));
+    }
+
+    public String obtenerCadena() {
+        // System.out.println("Posicion: " + posicion + ", longitud: " + longitud);
+        return expresion.substring(posicion, posicion
+                + longitud);
     }
 }

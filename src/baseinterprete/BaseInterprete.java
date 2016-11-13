@@ -5,8 +5,9 @@
  */
 package baseinterprete;
 
-import interprete.Lexer;
-import interprete.Token;
+import interprete.VM;
+
+import java.util.Scanner;
 
 /**
  *
@@ -18,22 +19,20 @@ public class BaseInterprete {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String programa = "2+ 233 +  4.5";
-        Lexer lexer = new Lexer(programa);
-        
-       while(!lexer.match(Token.FIN_ARCHIVO) ){
-           if( lexer.match(Token.VALOR_ENTERO) ){
-               System.out.println("Entero " + lexer.obtenerEntero());
-           }
-           if( lexer.match(Token.SUMA) ){
-               System.out.println("SUMA ");
-           }
+        // TODO code application logic here
+        Scanner ENTRADA = new Scanner(System.in);
 
-           if( lexer.match(Token.VALOR_REAL) ){
-               System.out.println("Real "+ lexer.obtenerReal());
-           }
-         lexer.advance();
-       }
+        System.out.println("Ingrese la expresión aritmética: ");
+        String expresion = ENTRADA.nextLine();
+//
+//        Lexer lexer = new Lexer(expresion);
+//        Parser parser = new Parser(lexer);
+//        parser.declaraciones();
+        //
+        VM calculadora = new VM(expresion);
+
+        calculadora.run();
+        System.out.println("\n" + calculadora.getAnswer());
     }
     
 }
