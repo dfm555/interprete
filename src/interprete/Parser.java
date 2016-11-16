@@ -6,15 +6,15 @@
 package interprete;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
- *
  * @author Oscar Arenas
  */
 public class Parser {
 
     private final Lexer lexer;
-    private final ArrayList<Number> listaInstrucciones;
+    private final ArrayList<Object> listaInstrucciones;
     private final ArrayList<Variable> tablaDeSimbolos;
 
     public Parser(Lexer lexer) {
@@ -25,7 +25,7 @@ public class Parser {
 
     public void declaraciones() {
         while (!lexer.match(Token.FIN_ARCHIVO)) {
-            asignacion();
+            asignaciones();
             expresiones();
         }
 
@@ -76,56 +76,87 @@ public class Parser {
             System.out.println(")");
 
             lexer.advance();
+        } else if (this.lexer.match(Token.ID)) {
+            String cadena = lexer.obtenerCadena();
+            listaInstrucciones.add(Instruccion.PUSH_IDENTIFICADOR);
+            listaInstrucciones.add(cadena);
+            lexer.advance();
         }
+
+        factorPrimo();
     }
 
     public void expresion() {
         termino();
-        expresionPrima();
+        terminoPrimo();
     }
 
-    public void expresionPrima() {
+    public void terminoPrimo() {
         if (lexer.match(Token.SUMA)) {
             lexer.advance();
             termino();
             listaInstrucciones.add(Instruccion.SUMA);
-            expresionPrima();
+            terminoPrimo();
         }
 
         if (lexer.match(Token.RESTA)) {
             lexer.advance();
             termino();
             listaInstrucciones.add(Instruccion.RESTA);
-            expresionPrima();
+            terminoPrimo();
+        }
+    }
+
+    private void factorPrimo() {
+        if (lexer.match(Token.MULTIPLICACION)) {
+            lexer.advance();
+            termino();
+            listaInstrucciones.add(Instruccion.MULTIPLICACION);
+            factorPrimo();
+        }
+
+        if (lexer.match(Token.DIVISION)) {
+            lexer.advance();
+            termino();
+            listaInstrucciones.add(Instruccion.DIVISION);
+            factorPrimo();
+        }
+    }
+
+    public void asignaciones() {
+
+        if (lexer.match(Token.ID) && lexer.nextTokenIs(Token.ASIGNACION)) {
+            asignacion();
+            if (!lexer.match(Token.PUNTOYCOMA)) {
+                //System.out.println("Error: Se esperaba ; en la instrucción de asignación.");
+                return;
+            }
+            lexer.advance();
+            asignaciones();
         }
     }
 
     public void asignacion() {
-        if (lexer.match(Token.ID) && lexer.nextTokenIs(Token.ASIGNACION)) {
-            String cadena = lexer.obtenerCadena();
+        String cadena = lexer.obtenerCadena();
 
-            Variable id = new Variable(cadena);
+        Variable id = new Variable(cadena);
 
-            if (!tablaDeSimbolos.contains(id)) {
-                tablaDeSimbolos.add(id);
-            }
-
-            lexer.advance();
-            lexer.advance();
-
-            expresion();
-            if (!lexer.match(Token.PUNTOYCOMA)) {
-                System.out.println("Error: Se esperaba ; en la instrucción de asignación.");
-                return;
-            }
-            lexer.advance();
-
-            listaInstrucciones.add(Instruccion.ASIGNACION);
-            listaInstrucciones.add(tablaDeSimbolos.indexOf(id));
+        if (!tablaDeSimbolos.contains(id)) {
+            tablaDeSimbolos.add(id);
         }
+
+        lexer.advance();
+        lexer.advance();
+
+        asignaciones();
+
+        expresion();
+
+        listaInstrucciones.add(Instruccion.ASIGNACION);
+        listaInstrucciones.add(tablaDeSimbolos.indexOf(id));
     }
 
-    public ArrayList<Number> obtenerInstrucciones() {
+    public ArrayList<Object> obtenerInstrucciones() {
         return listaInstrucciones;
     }
 

@@ -45,6 +45,10 @@ public class Lexer {
                     return Token.SUMA;
                 case '-':
                     return Token.RESTA;
+                case '*':
+                    return Token.MULTIPLICACION;
+                case '/':
+                    return Token.DIVISION;
                 case '(':
                     return Token.ABRIR_PARENTESIS;
                 case ')':

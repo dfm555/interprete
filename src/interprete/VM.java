@@ -14,8 +14,8 @@ import java.util.Stack;
  */
 public class VM {
 
-    private final ArrayList<Number> listaInstrucciones;
-    private final Stack<Number> pilaNumeros;
+    private final ArrayList<Object> listaInstrucciones;
+    private final Stack<Object> pilaNumeros;
     private String cadenaResultado;
     private ArrayList<Variable> tablaDeSimbolos;
 
@@ -34,20 +34,17 @@ public class VM {
         int i = 0;
 
         while (i < n) {
-            int operacion = listaInstrucciones.get(i).intValue();
+            int operacion = (int) listaInstrucciones.get(i);
 
             switch (operacion) {
                 case Instruccion.FIN:
                     return;
                 case Instruccion.PRINT:
                     if (pilaNumeros.size() > 0) {
-                        Number ans = pilaNumeros.pop();
+                        Object ans = pilaNumeros.pop();
 
-                        if (ans.intValue() == ans.doubleValue()) {
-                            cadenaResultado += "ans = " + ans.intValue() + "\n";
-                        } else {
-                            cadenaResultado += "ans = " + ans + "\n";
-                        }
+                        cadenaResultado += "ans = " + ans + "\n";
+
                     }
                     break;
                 case Instruccion.POP:
@@ -57,36 +54,119 @@ public class VM {
                     break;
                 case Instruccion.SUMA:
                     if (pilaNumeros.size() > 1) {
-                        Number numero2 = pilaNumeros.pop();
-                        Number numero1 = pilaNumeros.pop();
+                        Object numero2 = pilaNumeros.pop();
+                        Object numero1 = pilaNumeros.pop();
+
+                        if(numero1 instanceof Variable){
+                            numero1 = ((Variable) numero1).valor;
+
+                        }
+
+                        if(numero2 instanceof Variable){
+                            numero1 = ((Variable) numero2).valor;
+                        }
 
                         if (numero1 instanceof Integer
                                 && numero2 instanceof Integer) {
-                            pilaNumeros.push(numero1.intValue()
-                                    + numero2.intValue());
+                            pilaNumeros.push( (int) numero1
+                                    + (int) numero2);
                         } else {
-                            pilaNumeros.push(numero1.floatValue()
-                                    + numero2.floatValue());
+                            pilaNumeros.push( (float) numero1
+                                    +  (float) numero2);
                         }
-                        // System.out.println("SUMA");
+                        //System.out.println("SUMA");
                     } else {
                         throw new ArithmeticException("Error: Falta operando.");
                     }
                     break;
                 case Instruccion.RESTA:
                     if (pilaNumeros.size() > 1) {
-                        Number numero2 = pilaNumeros.pop();
-                        Number numero1 = pilaNumeros.pop();
+                        Object numero2 = pilaNumeros.pop();
+                        Object numero1 = pilaNumeros.pop();
+
+                        if(numero1 instanceof Variable){
+                            numero1 = ((Variable) numero1).valor;
+
+                        }
+
+                        if(numero2 instanceof Variable){
+                            numero1 = ((Variable) numero2).valor;
+                        }
 
                         if (numero1 instanceof Integer
                                 && numero2 instanceof Integer) {
-                            pilaNumeros.push(numero1.intValue()
-                                    - numero2.intValue());
+                            pilaNumeros.push( (int) numero1
+                                    - (int) numero2);
                         } else {
-                            pilaNumeros.push(numero1.floatValue()
-                                    - numero2.floatValue());
+                            pilaNumeros.push( (float) numero1
+                                    -  (float) numero2);
                         }
-                        // System.out.println("RESTA");
+                        //System.out.println("RESTA");
+                    } else {
+                        throw new ArithmeticException("Error: Falta operando.");
+                    }
+                    break;
+                case Instruccion.MULTIPLICACION:
+                    if (pilaNumeros.size() > 1) {
+                        Object numero2 = pilaNumeros.pop();
+                        Object numero1 = pilaNumeros.pop();
+
+                        if(numero1 instanceof Variable){
+                            numero1 = ((Variable) numero1).valor;
+
+                        }
+
+                        if(numero2 instanceof Variable){
+                            numero1 = ((Variable) numero2).valor;
+                        }
+
+                        System.out.println("numero1: "+numero1);
+                        System.out.println("numero2: "+numero2);
+
+                        if (numero1 instanceof Integer
+                                && numero2 instanceof Integer) {
+                            pilaNumeros.push( (int) numero1
+                                    * (int) numero2);
+                        } else {
+                            pilaNumeros.push( (float) numero1
+                                    *  (float) numero2);
+                        }
+                        //System.out.println("MULTIPLICACION");
+                    } else {
+                        throw new ArithmeticException("Error: Falta operando.");
+                    }
+                    break;
+                case Instruccion.DIVISION:
+                    if (pilaNumeros.size() > 1) {
+                        Object numero2 = pilaNumeros.pop();
+                        Object numero1 = pilaNumeros.pop();
+
+                        if(numero1 instanceof Variable){
+                            numero1 = ((Variable) numero1).valor;
+
+                        }
+
+                        if(numero2 instanceof Variable){
+                            numero1 = ((Variable) numero2).valor;
+                        }
+
+                        if (numero1 instanceof Integer
+                                && numero2 instanceof Integer) {
+                            if(numero2 != 0){
+                                pilaNumeros.push( (int) numero1 / (int) numero2);
+                            }else{
+                                throw new ArithmeticException("Error: Division por cero");
+                            }
+
+                        } else {
+                            if(numero2 != 0){
+                                pilaNumeros.push( new Float(numero1.toString())
+                                        / new Float(numero2.toString()) );
+                            }else{
+                                throw new ArithmeticException("Error: Division por cero");
+                            }
+                        }
+                        System.out.println("Division");
                     } else {
                         throw new ArithmeticException("Error: Falta operando.");
                     }
@@ -98,20 +178,21 @@ public class VM {
                     break;
                 case Instruccion.PUSH_NUMERO_REAL:
                     ++i;
-                    pilaNumeros.push(listaInstrucciones.get(i).floatValue());
+                    pilaNumeros.push(listaInstrucciones.get(i));
                     break;
                 case Instruccion.ASIGNACION:
                     ++i;
-                    int index = listaInstrucciones.get(i).intValue();
+                    int index = (int) listaInstrucciones.get(i);
                     if (pilaNumeros.size() > 0) {
-                        Number numero1 = pilaNumeros.pop();
+                        Object numero1 = pilaNumeros.pop();
 
+                        pilaNumeros.push(numero1);
                         if (numero1 instanceof Integer) {
                             tablaDeSimbolos.get(index).tipo = "entero";
-                            tablaDeSimbolos.get(index).valor = "" + numero1.intValue();
+                            tablaDeSimbolos.get(index).valor = "" + (int) numero1;
                         } else {
                             tablaDeSimbolos.get(index).tipo = "real";
-                            tablaDeSimbolos.get(index).valor = "" + numero1.floatValue();
+                            tablaDeSimbolos.get(index).valor = "" +  (double) numero1;
                         }
 
                         System.out.println("\n" + tablaDeSimbolos.get(index));

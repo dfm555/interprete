@@ -25,7 +25,8 @@ public class Instruccion {
     //
     public static final int PUSH_NUMERO_ENTERO = 100;
     public static final int PUSH_NUMERO_REAL = 101;
-    public static final int ASIGNACION = 102;
+    public static final int PUSH_IDENTIFICADOR = 102;
+    public static final int ASIGNACION = 103;
 
     public static final int PRINT = 200;
     public static final int POP = 201;
