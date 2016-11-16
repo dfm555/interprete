@@ -5,7 +5,10 @@
  */
 package interprete;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -71,8 +74,8 @@ public class VM {
                             pilaNumeros.push( (int) numero1
                                     + (int) numero2);
                         } else {
-                            pilaNumeros.push( (float) numero1
-                                    +  (float) numero2);
+                            pilaNumeros.push(  new Float(numero1.toString())
+                                    + new Float(numero2.toString()).floatValue());
                         }
                         //System.out.println("SUMA");
                     } else {
@@ -98,8 +101,8 @@ public class VM {
                             pilaNumeros.push( (int) numero1
                                     - (int) numero2);
                         } else {
-                            pilaNumeros.push( (float) numero1
-                                    -  (float) numero2);
+                            pilaNumeros.push(  new Float(numero1.toString())
+                                    - new Float(numero2.toString()).floatValue());
                         }
                         //System.out.println("RESTA");
                     } else {
@@ -128,8 +131,8 @@ public class VM {
                             pilaNumeros.push( (int) numero1
                                     * (int) numero2);
                         } else {
-                            pilaNumeros.push( (float) numero1
-                                    *  (float) numero2);
+                            pilaNumeros.push(  new Float(numero1.toString())
+                                    * new Float(numero2.toString()).floatValue());
                         }
                         //System.out.println("MULTIPLICACION");
                     } else {
@@ -180,6 +183,12 @@ public class VM {
                     ++i;
                     pilaNumeros.push(listaInstrucciones.get(i));
                     break;
+                case Instruccion.PUSH_IDENTIFICADOR:
+                    ++i;
+                    Variable variable = new Variable(listaInstrucciones.get(i).toString());
+                    int varIndex = tablaDeSimbolos.indexOf(variable);
+                    pilaNumeros.push(tablaDeSimbolos.get(varIndex).valor);
+                    break;
                 case Instruccion.ASIGNACION:
                     ++i;
                     int index = (int) listaInstrucciones.get(i);
@@ -192,7 +201,7 @@ public class VM {
                             tablaDeSimbolos.get(index).valor = "" + (int) numero1;
                         } else {
                             tablaDeSimbolos.get(index).tipo = "real";
-                            tablaDeSimbolos.get(index).valor = "" +  (double) numero1;
+                            tablaDeSimbolos.get(index).valor = "" +  new Double(numero1.toString());
                         }
 
                         System.out.println("\n" + tablaDeSimbolos.get(index));
