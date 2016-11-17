@@ -5,10 +5,7 @@
  */
 package interprete;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -60,15 +57,6 @@ public class VM {
                         Object numero2 = pilaNumeros.pop();
                         Object numero1 = pilaNumeros.pop();
 
-                        if(numero1 instanceof Variable){
-                            numero1 = ((Variable) numero1).valor;
-
-                        }
-
-                        if(numero2 instanceof Variable){
-                            numero1 = ((Variable) numero2).valor;
-                        }
-
                         if (numero1 instanceof Integer
                                 && numero2 instanceof Integer) {
                             pilaNumeros.push( (int) numero1
@@ -86,15 +74,6 @@ public class VM {
                     if (pilaNumeros.size() > 1) {
                         Object numero2 = pilaNumeros.pop();
                         Object numero1 = pilaNumeros.pop();
-
-                        if(numero1 instanceof Variable){
-                            numero1 = ((Variable) numero1).valor;
-
-                        }
-
-                        if(numero2 instanceof Variable){
-                            numero1 = ((Variable) numero2).valor;
-                        }
 
                         if (numero1 instanceof Integer
                                 && numero2 instanceof Integer) {
@@ -114,18 +93,6 @@ public class VM {
                         Object numero2 = pilaNumeros.pop();
                         Object numero1 = pilaNumeros.pop();
 
-                        if(numero1 instanceof Variable){
-                            numero1 = ((Variable) numero1).valor;
-
-                        }
-
-                        if(numero2 instanceof Variable){
-                            numero1 = ((Variable) numero2).valor;
-                        }
-
-                        System.out.println("numero1: "+numero1);
-                        System.out.println("numero2: "+numero2);
-
                         if (numero1 instanceof Integer
                                 && numero2 instanceof Integer) {
                             pilaNumeros.push( (int) numero1
@@ -144,15 +111,6 @@ public class VM {
                         Object numero2 = pilaNumeros.pop();
                         Object numero1 = pilaNumeros.pop();
 
-                        if(numero1 instanceof Variable){
-                            numero1 = ((Variable) numero1).valor;
-
-                        }
-
-                        if(numero2 instanceof Variable){
-                            numero1 = ((Variable) numero2).valor;
-                        }
-
                         if (numero1 instanceof Integer
                                 && numero2 instanceof Integer) {
                             if(numero2 != 0){
@@ -169,7 +127,7 @@ public class VM {
                                 throw new ArithmeticException("Error: Division por cero");
                             }
                         }
-                        System.out.println("Division");
+                        //System.out.println("Division");
                     } else {
                         throw new ArithmeticException("Error: Falta operando.");
                     }
