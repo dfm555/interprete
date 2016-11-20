@@ -110,13 +110,15 @@ public class Lexer {
     public boolean nextTokenIs(int token) {
         int auxiliarPoisicion = posicion;
         int auxiliarLongitud = longitud;
-
+        int auxToken = nuevoToken;
         advance();
         boolean ans = match(token);
 
         posicion = auxiliarPoisicion;
         longitud = auxiliarLongitud;
-
+        if(!ans){
+            nuevoToken = auxToken;
+        }
         return ans;
     }
 
